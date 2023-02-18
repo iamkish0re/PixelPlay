@@ -6,7 +6,6 @@ from PIL import Image
 def is_path_valid(path):
     if path and Path(path).exists():
         return True
-    sg.popup_error("Please check the File Paths!")
     return False
 
 def view_img(src_file):
@@ -31,13 +30,19 @@ def view_img(src_file):
     img_window.close()
     # sg.popup_no_titlebar(bio.getvalue())
 
-def convert_png_to_jpg(src_file, trg_folder):
+def convert_image(src_file, trg_folder, type):
     src_img = Image.open(src_file)
-    
+    trg_dir = Path()
+    if trg_folder == None:
+        trg_dir = Path(src_img).parent
+    else:
+        trg_dir = Path(trg_folder)
     file_name = Path(src_file).stem
-    output_file = Path(trg_folder) / f"{file_name}.jpg"
+
+    output_file = trg_dir / f"{file_name}.jpg"
     
-    rgb = src.convert('RGB')
+    # PNG TO JPG
+    rgb = src_img.convert('RGB')
     rgb.save(output_file)
     sg.popup_no_titlebar("File Converted!")
 
@@ -46,12 +51,22 @@ def main_window():
                 ["Help", ["About"]]]
     layout = [
         [sg.MenubarCustom(menu_def, tearoff=False)],
-        [sg.Text("Convert to "), sg.Combo(['PNG', 'JPG', "PDF"])],
-        [sg.Text("Source File :", s=16, justification='right'), sg.Input(key="-IN-"), sg.FileBrowse(file_types=(("Image Files", "*.*"),))],
-        [sg.Text("Target Folder :", s=16, justification='right'), sg.Input(key="-OUT-"), sg.FolderBrowse()],
-        [sg.Exit(), 
-        sg.Button("View Image"), 
-        sg.Button("Convert Image")]
+        [sg.Text("Convert to "), sg.Combo(['PNG', 'JPG', "PDF"], key="-TYPE-")],
+        [
+            sg.Text("Source File :", s=16, justification='right'), 
+            sg.Input(key="-IN-"), 
+            sg.FileBrowse(file_types=(("Image Files", "*.*"),))],
+        [
+            sg.Text("Target Folder :", s=16, justification='right'), 
+            sg.Input(key="-OUT-"), 
+            sg.FolderBrowse()],
+        [
+            sg.Button("View Image"), 
+            sg.Button("Convert Image")],
+        [sg.HorizontalSeparator()],
+        [
+            sg.Text("", key="-STATUS-"),
+        ]
     ]
     title = settings["GUI"]["title"]
     window = sg.Window(title, layout, use_custom_titlebar = True)
@@ -61,13 +76,20 @@ def main_window():
         print(event, values)
         if event in (sg.WINDOW_CLOSED, "Exit"):
             break
+        if event == "About":
+            sg.popup(title, "Version 1.0", "Image Converter", grab_anywhere=True)
         if event == "View Image":
+            window['-STATUS-'].update("")
             if is_path_valid(values["-IN-"]):
                 view_img(values["-IN-"])
-                
+            else:
+                window['-STATUS-'].update("Path/File doesnt exist")
         if event == "Convert Image":
-            if is_path_valid(values["-IN-"]) and is_path_valid(values["-OUT-"]):
-                convert_png_to_jpg(src=values["-IN-"], trg=values["-OUT-"])
+            window['-STATUS-'].update("")
+            if is_path_valid(values["-IN-"]):
+                convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
+            else:
+                window['-STATUS-'].update("Path/File doesnt exist")
     window.close()
 
 if __name__ == "__main__":
