@@ -29,7 +29,7 @@ PixelPlay is released under the GNU license. See the `LICENSE` file for more inf
 
 ## Credits
 
-PixelPlay was created by Kishore Sreedharan. If you have any questions or feedback, please contact John at kishoresreedhar1999@gmail.com.
+PixelPlay was created by Kishore Sreedharan. If you have any questions or feedback, please contact Kishore at kishoresreedhar1999@gmail.com.
 
 ## Contributing
 
