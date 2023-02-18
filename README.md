@@ -16,7 +16,7 @@ PixelPlay is a Python program that converts images from one format to another, i
 
 ### Using the standalone executable file
 
-1. Download the latest release of the standalone executable file for Windows from the [releases page](https://github.com/example/PixelPlay/releases).
+1. Download the latest release of the standalone executable file for Windows from the [releases page](https://github.com/iamkish0re/PixelPlay/releases).
 2. Double-click the executable file to run it.
 
 ## Usage
