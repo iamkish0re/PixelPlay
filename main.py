@@ -48,7 +48,6 @@ def is_same_format(src_file, type):
 
 def convert_image(src_file, trg_folder, type):
     
-
     src_img = Image.open(src_file)
     trg_dir = Path()
 
@@ -62,9 +61,12 @@ def convert_image(src_file, trg_folder, type):
     output_file = trg_dir / f"{file_name}.jpg"
     
     # JPG
-    rgb = src_img.convert('RGB')
-    rgb.save(output_file)
-    sg.popup_no_titlebar("File Converted!")
+    if type == "JPG":
+        rgb = src_img.convert('RGB')
+        rgb.save(output_file)
+        sg.popup_no_titlebar("File Converted!")
+    else:
+        sg.popup_no_titlebar("Under Development!")
 
 def main_window():
     menu_def = [["File", ["Setting", "Theme", "---", "Exit"]],
