@@ -3,6 +3,10 @@ import io
 import PySimpleGUI as sg
 from PIL import Image
 
+"""
+Function definitions for conversions
+
+"""
 def is_path_valid(path):
     if path and Path(path).exists():
         return True
@@ -30,9 +34,24 @@ def view_img(src_file):
     img_window.close()
     # sg.popup_no_titlebar(bio.getvalue())
 
+def is_same_format(src_file, type):
+    format_extensions = {
+        "JPG": '.jpg',
+        "PNG": '.png',
+        "PDF": '.pdf'
+    }
+
+    src_ext = Path(src_file).suffix
+    if src_ext == format_extensions[type]:
+        return True
+    return False
+
 def convert_image(src_file, trg_folder, type):
+    
     src_img = Image.open(src_file)
     trg_dir = Path()
+
+    # If the target folder is not specified, save in source folder
     if trg_folder == None:
         trg_dir = Path(src_img).parent
     else:
@@ -41,17 +60,20 @@ def convert_image(src_file, trg_folder, type):
 
     output_file = trg_dir / f"{file_name}.jpg"
     
-    # PNG TO JPG
-    rgb = src_img.convert('RGB')
-    rgb.save(output_file)
-    sg.popup_no_titlebar("File Converted!")
+    # JPG
+    if type == "JPG":
+        rgb = src_img.convert('RGB')
+        rgb.save(output_file)
+        sg.popup_no_titlebar("File Converted!")
+    else:
+        sg.popup_no_titlebar("Under Development!")
 
 def main_window():
     menu_def = [["File", ["Setting", "Theme", "---", "Exit"]],
                 ["Help", ["About"]]]
     layout = [
         [sg.MenubarCustom(menu_def, tearoff=False)],
-        [sg.Text("Convert to "), sg.Combo(['PNG', 'JPG', "PDF"], key="-TYPE-")],
+        [sg.Text("Convert to "), sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-TYPE-")],
         [
             sg.Text("Source File :", s=16, justification='right'), 
             sg.Input(key="-IN-"), 
@@ -78,16 +100,25 @@ def main_window():
             break
         if event == "About":
             sg.popup(title, "Version 1.0", "Image Converter", grab_anywhere=True)
+        # View image
         if event == "View Image":
             window['-STATUS-'].update("")
             if is_path_valid(values["-IN-"]):
                 view_img(values["-IN-"])
             else:
                 window['-STATUS-'].update("Path/File doesnt exist")
+        # Convert event
         if event == "Convert Image":
             window['-STATUS-'].update("")
+            # Checks if the source is a valid path and the file exists
             if is_path_valid(values["-IN-"]):
-                convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
+                # Checks if the file and conversion format is same
+                if is_same_format(src_file=values["-IN-"], type=values["-TYPE-"]):
+                    convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
+                # TODO: Create a modal that promts the formats are same and if the user clicks yes convert else PASS
+                else:
+                    convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
+                    window['-STATUS-'].update("Same format Detected!")
             else:
                 window['-STATUS-'].update("Path/File doesnt exist")
     window.close()
