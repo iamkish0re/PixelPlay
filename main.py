@@ -38,11 +38,12 @@ def is_same_format(src_file, type):
     format_extensions = {
         "JPG": '.jpg',
         "PNG": '.png',
-        "PDF": '.pdf'
+        "BMP": '.bmp',
+        "TIFF": '.tiff'
     }
 
     src_ext = Path(src_file).suffix
-    if src_ext == format_extensions[type]:
+    if src_ext == format_extensions[type] and src_ext != None and format_extensions[type] != None:
         return True
     return False
 
@@ -117,7 +118,7 @@ def main_window():
                     convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
                 # TODO: Create a modal that promts the formats are same and if the user clicks yes convert else PASS
                 else:
-                    convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
+                    # convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
                     window['-STATUS-'].update("Same format Detected!")
             else:
                 window['-STATUS-'].update("Path/File doesnt exist")
