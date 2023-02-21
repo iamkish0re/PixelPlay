@@ -7,10 +7,13 @@ from PIL import Image
 Function definitions for conversions
 
 """
+
+
 def is_path_valid(path):
     if path and Path(path).exists():
         return True
     return False
+
 
 def view_img(src_file):
     src_img = Image.open(src_file)
@@ -23,16 +26,17 @@ def view_img(src_file):
         [sg.Image(data=bio.getvalue(), key="-IMG-")],
     ]
     img_title = src_file
-    img_window = sg.Window(img_title, img_layout, use_custom_titlebar = True)
+    img_window = sg.Window(img_title, img_layout, use_custom_titlebar=True)
 
     while True:
         event, values = img_window.read()
         print(event, values)
         if event in (sg.WINDOW_CLOSED, "Exit"):
-            break        
-        
+            break
+
     img_window.close()
     # sg.popup_no_titlebar(bio.getvalue())
+
 
 def is_same_format(src_file, type):
     format_extensions = {
@@ -47,8 +51,9 @@ def is_same_format(src_file, type):
         return True
     return False
 
+
 def convert_image(src_file, trg_folder, type):
-    
+
     src_img = Image.open(src_file)
     trg_dir = Path()
 
@@ -60,7 +65,7 @@ def convert_image(src_file, trg_folder, type):
     file_name = Path(src_file).stem
 
     output_file = trg_dir / f"{file_name}.jpg"
-    
+
     # JPG
     if type == "JPG":
         rgb = src_img.convert('RGB')
@@ -69,22 +74,27 @@ def convert_image(src_file, trg_folder, type):
     else:
         sg.popup_no_titlebar("Under Development!")
 
+
+# MAIN GUI WINDOW
 def main_window():
     menu_def = [["File", ["Setting", "Theme", "---", "Exit"]],
                 ["Help", ["About"]]]
     layout = [
         [sg.MenubarCustom(menu_def, tearoff=False)],
-        [sg.Text("Convert to "), sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-TYPE-")],
         [
-            sg.Text("Source File :", s=16, justification='right'), 
-            sg.Input(key="-IN-"), 
-            sg.FileBrowse(file_types=(("Image Files", "*.*"),))],
+            sg.Text("Convert "), 
+            sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-SRCTYPE-"),
+            sg.Text(" to "), sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-TYPE-")],
         [
-            sg.Text("Target Folder :", s=16, justification='right'), 
-            sg.Input(key="-OUT-"), 
+            sg.Text("Source File :", s=16, justification='right'),
+            sg.Input(key="-IN-"),
+            sg.FilesBrowse(file_types=(("Image Files", "*.*"),))],
+        [
+            sg.Text("Target Folder :", s=16, justification='right'),
+            sg.Input(key="-OUT-"),
             sg.FolderBrowse()],
         [
-            sg.Button("View Image"), 
+            sg.Button("View Image"),
             sg.Button("Convert Image")],
         [sg.HorizontalSeparator()],
         [
@@ -92,7 +102,7 @@ def main_window():
         ]
     ]
     title = settings["GUI"]["title"]
-    window = sg.Window(title, layout, use_custom_titlebar = True)
+    window = sg.Window(title, layout, use_custom_titlebar=True)
 
     while True:
         event, values = window.read()
@@ -100,7 +110,8 @@ def main_window():
         if event in (sg.WINDOW_CLOSED, "Exit"):
             break
         if event == "About":
-            sg.popup(title, "Version 1.0", "Image Converter", grab_anywhere=True)
+            sg.popup(title, "Version 1.0",
+                     "Image Converter", grab_anywhere=True)
         # View image
         if event == "View Image":
             window['-STATUS-'].update("")
@@ -115,7 +126,8 @@ def main_window():
             if is_path_valid(values["-IN-"]):
                 # Checks if the file and conversion format is same
                 if is_same_format(src_file=values["-IN-"], type=values["-TYPE-"]):
-                    convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
+                    convert_image(
+                        src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
                 # TODO: Create a modal that promts the formats are same and if the user clicks yes convert else PASS
                 else:
                     # convert_image(src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
@@ -124,11 +136,12 @@ def main_window():
                 window['-STATUS-'].update("Path/File doesnt exist")
     window.close()
 
+
 if __name__ == "__main__":
     CONFIG_PATH = Path.cwd()
     print(CONFIG_PATH)
     settings = sg.UserSettings(
-        path = CONFIG_PATH, filename = 'config.ini', use_config_file = True, convert_bools_and_none = True
+        path=CONFIG_PATH, filename='config.ini', use_config_file=True, convert_bools_and_none=True
     )
     font_family = settings["GUI"]["font_family"]
     font_size = int(settings["GUI"]["font_size"])
