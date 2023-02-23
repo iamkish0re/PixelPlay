@@ -2,12 +2,13 @@ from pathlib import Path
 import io
 import PySimpleGUI as sg
 from PIL import Image
+import configparser
 
 """
-Function definitions for conversions
-
+Formats: JPG, PNG, GIF, SVG, BMP, EPS, PSD, TIFF and WEBP
+Current: JPG, PNG
 """
-
+# Function definitions for conversions
 
 def is_path_valid(path):
     if path and Path(path).exists():
@@ -43,7 +44,9 @@ def is_same_format(src_file, type):
         "JPG": '.jpg',
         "PNG": '.png',
         "BMP": '.bmp',
-        "TIFF": '.tiff'
+        "TIFF": '.tiff',
+        "WEBP": '.webp',
+        "ICO": '.ico'
     }
 
     src_ext = Path(src_file).suffix
@@ -77,6 +80,7 @@ def convert_image(src_file, trg_folder, type):
 
 # MAIN GUI WINDOW
 def main_window():
+    img_types = (".png", ".jpg", "jpeg", ".tiff", ".tif", ".bmp") 
     menu_def = [["File", ["Setting", "Theme", "---", "Exit"]],
                 ["Help", ["About"]]]
     layout = [
@@ -84,11 +88,11 @@ def main_window():
         [
             sg.Text("Convert "), 
             sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-SRCTYPE-"),
-            sg.Text(" to "), sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-TYPE-")],
+            sg.Text(" to "), sg.Combo(['PNG', 'JPG'], key="-TYPE-")],
         [
             sg.Text("Source File :", s=16, justification='right'),
             sg.Input(key="-IN-"),
-            sg.FilesBrowse(file_types=(("Image Files", "*.*"),))],
+            sg.FilesBrowse(file_types=(("Image Files", img_types),))],
         [
             sg.Text("Target Folder :", s=16, justification='right'),
             sg.Input(key="-OUT-"),
@@ -139,6 +143,11 @@ def main_window():
 
 if __name__ == "__main__":
     CONFIG_PATH = Path.cwd()
+    config = configparser.ConfigParser()
+    # CHECKS IF CONFIG.INI IS PRESENT, IF NOT CREATES IT WITH DEFAULT SETTINGS!
+    if not Path(CONFIG_PATH / 'config.ini').exists():
+        config['GUI'] = {'title': 'PixelPlay', 'font_size': 10, 'font_family': 'consolas'}
+        config.write(open('config.ini', 'w'))
     print(CONFIG_PATH)
     settings = sg.UserSettings(
         path=CONFIG_PATH, filename='config.ini', use_config_file=True, convert_bools_and_none=True
@@ -147,4 +156,5 @@ if __name__ == "__main__":
     font_size = int(settings["GUI"]["font_size"])
 
     sg.set_options(font=(font_family, font_size))
+    sg.theme("DarkGrey13")
     main_window()
