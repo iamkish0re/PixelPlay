@@ -50,9 +50,9 @@ def is_same_format(src_file, type):
     }
 
     src_ext = Path(src_file).suffix
-    if src_ext == format_extensions[type] and src_ext != None and format_extensions[type] != None:
-        return True
-    return False
+    print(src_ext, type, format_extensions[type], src_ext == format_extensions[type])
+    return src_ext == format_extensions[type]
+
 
 
 def convert_image(src_file, trg_folder, type):
@@ -65,34 +65,40 @@ def convert_image(src_file, trg_folder, type):
         trg_dir = Path(src_img).parent
     else:
         trg_dir = Path(trg_folder)
+
     file_name = Path(src_file).stem
 
-    output_file = trg_dir / f"{file_name}.jpg"
-
+    src_format = Path(src_file).suffix
     # JPG
-    if type == "JPG":
-        rgb = src_img.convert('RGB')
-        rgb.save(output_file)
-        sg.popup_no_titlebar("File Converted!")
-    else:
-        sg.popup_no_titlebar("Under Development!")
+    if src_format == ".png":
+        if type == "JPG":
+            rgb = src_img.convert('RGB')
+            rgb.save(trg_dir / f"{file_name}.jpg")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".jpg")
+        else:
+            sg.popup_no_titlebar("Under Development!")
+    elif src_format in (".jpg", ".jpeg"):
+        if type == "PNG":
+            rgb.save(trg_dir / f"{file_name}.png")
+            sg.popup_no_titlebar("File Converted!")
+        else:
+            sg.popup_no_titlebar("Under Development!")
 
 
 # MAIN GUI WINDOW
 def main_window():
-    img_types = (".png", ".jpg", "jpeg", ".tiff", ".tif", ".bmp") 
+    # img_types = (".png", ".jpg", "jpeg", ".tiff", ".tif", ".bmp") 
+    img_types = (".png", ".jpg", "jpeg") 
     menu_def = [["File", ["Setting", "Theme", "---", "Exit"]],
                 ["Help", ["About"]]]
     layout = [
         [sg.MenubarCustom(menu_def, tearoff=False)],
         [
-            sg.Text("Convert "), 
-            sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-SRCTYPE-"),
-            sg.Text(" to "), sg.Combo(['PNG', 'JPG'], key="-TYPE-")],
+            sg.Text("Convert to "), sg.Combo(['PNG', 'JPG', "BMP", "TIFF"], key="-TYPE-", readonly=True)],
         [
             sg.Text("Source File :", s=16, justification='right'),
             sg.Input(key="-IN-"),
-            sg.FilesBrowse(file_types=(("Image Files", img_types),))],
+            sg.FilesBrowse(file_types=(("Image Files " + str(img_types), img_types),))],
         [
             sg.Text("Target Folder :", s=16, justification='right'),
             sg.Input(key="-OUT-"),
@@ -129,7 +135,8 @@ def main_window():
             # Checks if the source is a valid path and the file exists
             if is_path_valid(values["-IN-"]):
                 # Checks if the file and conversion format is same
-                if is_same_format(src_file=values["-IN-"], type=values["-TYPE-"]):
+                if not is_same_format(src_file=values["-IN-"], type=values["-TYPE-"]):
+                    print("HERE")
                     convert_image(
                         src_file=values["-IN-"], trg_folder=values["-OUT-"], type=values["-TYPE-"])
                 # TODO: Create a modal that promts the formats are same and if the user clicks yes convert else PASS
