@@ -14,8 +14,8 @@ jobs:
       - name: Compile executable
         run: |
           cd ${{ github.workspace }}
-          pip install psgcompiler
-          .\psgc.bat
+          pip install pyinstaller
+          pyinstaller --onefile --icon=fav.ico main.py
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
