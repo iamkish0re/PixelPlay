@@ -14,6 +14,7 @@ jobs:
       - name: Compile executable
         run: |
           cd ${{ github.workspace }}
+          pip install psgcompiler
           .\psgc.bat
       - name: Create Release
         id: create_release
