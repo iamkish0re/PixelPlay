@@ -21,7 +21,7 @@ PixelPlay is a Python program that converts images from one format to another, i
 
 ## Usage
 
-To use the program through the GUI, run `python main.py` or double-click the `main.py` file. This will open the program's graphical interface, where you can select the input file, output file, and desired format using the file selection and drop-down menus. Click the "Convert" button to convert the image.
+To use the program through the GUI, run `python main.pyw` or double-click the `main.pyw` file. This will open the program's graphical interface, where you can select the input file, output file, and desired format using the file selection and drop-down menus. Click the "Convert" button to convert the image.
 
 ## License
 

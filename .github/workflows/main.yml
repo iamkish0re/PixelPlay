@@ -1,0 +1,41 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+permissions: read-all|write-all
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Compile executable
+        run: |
+          cd ${{ github.workspace }}
+          pip install pyinstaller
+          pyinstaller --onefile --icon=favicon.ico main.pyw
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
+          body: |
+            Changes in this release:
+            * Compiled executable from main.py
+          draft: false
+          prerelease: false
+      - name: Upload Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./main.exe
+          asset_name: main.exe
+          asset_content_type: application/octet-stream
