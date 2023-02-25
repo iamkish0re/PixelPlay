@@ -8,6 +8,7 @@ PixelPlay is a Python program that converts images from one format to another, i
 
 - Python 3.6 or higher
 - Pillow
+- PySimpleGUI
 
 ### Installing from source
 
