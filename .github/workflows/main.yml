@@ -16,7 +16,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           pip install pyinstaller
-          pyinstaller --onefile --icon=favicon.ico main.pyw
+          pyinstaller --onefile --icon=favicon.ico main.pyw --name=PixelPlay
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
