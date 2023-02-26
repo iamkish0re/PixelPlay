@@ -26,7 +26,7 @@ jobs:
           tag_name: v1.0.0
           release_name: Release v1.0.0
           body: |
-            Changes in this release:
+            What's new?
             * Compiled executable from main.py
           draft: false
           prerelease: false
