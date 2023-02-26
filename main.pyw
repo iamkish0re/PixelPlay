@@ -78,6 +78,9 @@ def convert_image(src_file, trg_folder, type):
             rgb = src_img.convert('RGB')
             rgb.save(trg_dir / f"{file_name}.bmp")
             sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".bmp")
+        elif type == "TIFF":
+            src_img.save(trg_dir / f"{file_name}.tiff", compression = "lzw")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".tiff")
         else:
             sg.popup_no_titlebar("Under Development!")
     elif src_format in (".jpg", ".jpeg"):
@@ -88,6 +91,9 @@ def convert_image(src_file, trg_folder, type):
             rgb = src_img.convert('RGB')
             rgb.save(trg_dir / f"{file_name}.bmp")
             sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".bmp")
+        elif type == "TIFF":
+            src_img.save(trg_dir / f"{file_name}.tiff")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".tiff")
         else:
             sg.popup_no_titlebar("Under Development!")
 
