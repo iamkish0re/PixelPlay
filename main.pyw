@@ -54,7 +54,6 @@ def is_same_format(src_file, type):
     return src_ext == format_extensions[type]
 
 
-
 def convert_image(src_file, trg_folder, type):
 
     src_img = Image.open(src_file)
@@ -75,12 +74,26 @@ def convert_image(src_file, trg_folder, type):
             rgb = src_img.convert('RGB')
             rgb.save(trg_dir / f"{file_name}.jpg")
             sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".jpg")
+        elif type == "BMP":
+            rgb = src_img.convert('RGB')
+            rgb.save(trg_dir / f"{file_name}.bmp")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".bmp")
+        elif type == "TIFF":
+            src_img.save(trg_dir / f"{file_name}.tiff", compression = "lzw")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".tiff")
         else:
             sg.popup_no_titlebar("Under Development!")
     elif src_format in (".jpg", ".jpeg"):
         if type == "PNG":
             rgb.save(trg_dir / f"{file_name}.png")
             sg.popup_no_titlebar("File Converted!")
+        elif type == "BMP":
+            rgb = src_img.convert('RGB')
+            rgb.save(trg_dir / f"{file_name}.bmp")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".bmp")
+        elif type == "TIFF":
+            src_img.save(trg_dir / f"{file_name}.tiff")
+            sg.popup_no_titlebar("File Converted!\n" + "Saved as " +  str(trg_dir) + "/" + file_name + ".tiff")
         else:
             sg.popup_no_titlebar("Under Development!")
 
@@ -113,6 +126,7 @@ def main_window():
     ]
     title = settings["GUI"]["title"]
     window = sg.Window(title, layout, use_custom_titlebar=True)
+    
 
     while True:
         event, values = window.read()
@@ -146,7 +160,6 @@ def main_window():
             else:
                 window['-STATUS-'].update("Path/File doesnt exist")
     window.close()
-
 
 if __name__ == "__main__":
     CONFIG_PATH = Path.cwd()
