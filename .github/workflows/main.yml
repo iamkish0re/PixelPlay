@@ -30,13 +30,13 @@ jobs:
           body: |
             What's new?
             🎉 Transform your images into a picture-perfect masterpiece!
-🖼️ PixelPlay now supports seamless conversion to JPG, BMP, and TIFF formats, making it easier than ever to share your stunning visuals with the world.
-Say goodbye to compatibility issues and hello to versatility with just a few clicks!
+            🖼️ PixelPlay now supports seamless conversion to JPG, BMP, and TIFF formats, making it easier than ever to share your stunning visuals with the world.
+            Say goodbye to compatibility issues and hello to versatility with just a few clicks!
 
-What's new?
+            What's new?
 
-Added BMP, TIFF conversions
-Fixed type conversion with PNG and JPG
+            Added BMP, TIFF conversions
+            Fixed type conversion with PNG and JPG
           draft: false
           prerelease: false
       - name: Upload Asset
